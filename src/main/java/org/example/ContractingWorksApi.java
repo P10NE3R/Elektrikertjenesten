@@ -6,14 +6,6 @@ import java.net.http.HttpResponse;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-
-
-/*
-URI.create("https://%s/token/generate".formatted(authHost))
-
-String url = "https://%s/client/%s/graphql".formatted(graphQlHost, clientId);
-
-*/
 public class ContractingWorksApi {
 
     static String cwToken;
@@ -21,16 +13,14 @@ public class ContractingWorksApi {
 
     static void fetchToken() throws Exception {
         Dotenv dotenv = Dotenv.load();
-        
-        
+
         String clientId = dotenv.get("clientId");
         String subjectId = dotenv.get("subjectId");
         String tenantId = dotenv.get("tenantId");
-        
-        
+
         String apiKey = dotenv.get("apiKey");
         String authHost = dotenv.get("authHost");
-        
+
         String body = """
             {
                 "apiKey": "%s",
@@ -41,6 +31,7 @@ public class ContractingWorksApi {
             """.formatted(apiKey, clientId, subjectId, tenantId);
 
         HttpClient client = HttpClient.newHttpClient();
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://" + authHost + "/token/generate"))
                 .header("Content-Type", "application/json")
@@ -50,14 +41,21 @@ public class ContractingWorksApi {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         String json = response.body();
-        cwToken = json.split("\"accessToken\":\"")[1].split("\"")[0];
+        System.out.println(json);
+
+        try {
+            cwToken = json.split("\"accessToken\":\"")[1].split("\"")[0];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new Exception("Auth failed (" + response.statusCode() + "): " + json);
+        }
+
         tokenFetchedAt = System.currentTimeMillis();
     }
 
     static String queryGraphQL(String query) throws Exception {
- 
+
         Dotenv dotenv = Dotenv.load();
-        if (System.currentTimeMillis() - tokenFetchedAt > 55 * 60 * 1000) {
+        if (cwToken == null || System.currentTimeMillis() - tokenFetchedAt > 55 * 60 * 1000) {
             fetchToken();
         }
 
