@@ -1,9 +1,10 @@
 package org.example;
-import io.github.cdimascio.dotenv.Dotenv;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class ContractingWorksApi {
 
@@ -12,11 +13,16 @@ public class ContractingWorksApi {
 
     static void fetchToken() throws Exception {
         Dotenv dotenv = Dotenv.load();
+        
+        
         String clientId = dotenv.get("clientId");
         String subjectId = dotenv.get("subjectId");
+        String tenantId = dotenv.get("tenantId");
+        
+        
         String apiKey = dotenv.get("apiKey");
         String authHost = dotenv.get("authHost");
-
+        
         String body = """
             {
                 "apiKey": "%s",
@@ -24,7 +30,7 @@ public class ContractingWorksApi {
                 "subjectId": "%s",
                 "tenantId": "%s"
             }
-            """.formatted(apiKey, subjectId, clientId);
+            """.formatted(apiKey, clientId, subjectId, tenantId);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -34,15 +40,14 @@ public class ContractingWorksApi {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        // parse the accessToken from the JSON response
-        // simplest way without a library:
+
         String json = response.body();
         cwToken = json.split("\"accessToken\":\"")[1].split("\"")[0];
         tokenFetchedAt = System.currentTimeMillis();
     }
 
     static String queryGraphQL(String query) throws Exception {
-        // refresh token if older than 55 minutes
+ 
         Dotenv dotenv = Dotenv.load();
         if (System.currentTimeMillis() - tokenFetchedAt > 55 * 60 * 1000) {
             fetchToken();
