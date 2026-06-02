@@ -6,6 +6,14 @@ import java.net.http.HttpResponse;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
+
+
+/*
+URI.create("https://%s/token/generate".formatted(authHost))
+
+String url = "https://%s/client/%s/graphql".formatted(graphQlHost, clientId);
+
+*/
 public class ContractingWorksApi {
 
     static String cwToken;
