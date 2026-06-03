@@ -1,47 +1,35 @@
 package org.example;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.net.http.HttpClient;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-
-
-            try {
-                String token = Token.getToken();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
         try {
-            System.out.println("🚀 Starter applikasjonen...");
-
+            System.out.println("Starter applikasjonen...");
 
             Dotenv config = Dotenv.load();
 
-
             HttpClient httpClient = HttpClient.newHttpClient();
-            String token = Token.getToken();
+            Token token = new Token();
             GraphQLClient graphQLClient = new GraphQLClient(httpClient, token, config);
-
 
             String query = "query GetProject($id: Int!) { project(id: $id) { name } }";
             Map<String, Object> variables = Map.of("id", 12345);
 
-            System.out.println("📡 Sender GraphQL-spørring til Devinco...");
-
+            System.out.println("Sender GraphQL-sporring til Devinco...");
 
             JsonNode result = graphQLClient.sendQuery(query, variables);
-
 
             System.out.println("Svar mottatt fra serveren:");
             System.out.println(result.toPrettyString());
 
         } catch (Exception e) {
-            System.err.println("Noe gikk galt under kjøring:");
+            System.err.println("Noe gikk galt under kjoring:");
             e.printStackTrace();
         }
-
     }
 }
