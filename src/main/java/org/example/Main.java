@@ -8,6 +8,10 @@ import java.util.Map;
 
 import java.sql.Connection;
 
+/**
+ * Startpunkt for applikasjonen.
+ * Orkestrerer tilkobling til Azure SQL-database og ContractingWorks GraphQL-API.
+ */
 public class Main {
     public static void main(String[] args) {
 

@@ -13,21 +13,22 @@ import java.util.Map;
 
 
 /**
- * Hjelpeklasse for å hente et tilgangstoken fra autentiseringsserveren.
- * Leser konfigurasjon fra .env-filen og sender en POST-forespørsel til autentiseringsserveren.
+ * Henter et tilgangstoken fra ContractingWorks sin autentiseringsserver.
+ * Sender en POST-forespørsel med innloggingsinfo og returnerer access token som streng.
  *
- *
- *
- *      AuthBaseUrl     – basis-URL til autentiseringstjenesten
- *      SubjectId       – identifikator for subjektet/brukeren
- *      ApiKey          – API-nøkkel for autentisering
- *      TenantId        – leietaker-ID i multi-tenant-oppsett
- *      CentId          – klient-ID (heltall)
+ * Påkrevde variabler i .env:
+ *      AuthBaseUrl – basis-URL til autentiseringstjenesten
+ *      SubjectId   – identifikator for brukeren
+ *      ApiKey      – API-nøkkel for autentisering
+ *      TenantId    – leietaker-ID i multi-tenant-oppsett
+ *      ClientId    – klient-ID (heltall)
  */
-
-
 public class Token {
 
+    /**
+     * Henter og returnerer et access token fra autentiseringsserveren.
+     * Kaster en feil hvis noen .env-variabler mangler eller token ikke returneres.
+     */
     static String getToken() throws Exception {
 
         //Denne er brukt for å hente variabler fra .env-fil

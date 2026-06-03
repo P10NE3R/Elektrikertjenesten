@@ -12,10 +12,11 @@ import java.util.Map;
 
 /**
  * Klient for å sende GraphQL-spørringer til ContractingWorks sitt API.
- * Henter automatisk et nytt access token før hver spørring.
- * Krever at GraphQLEndpoint er satt i .env-filen.
+ * Tar imot et access token fra Main og legger det på hver HTTP-forespørsel.
+ *
+ * Påkrevde variabler i .env:
+ *      GraphQLEndpoint – full URL til GraphQL-endepunktet
  */
-
 public class ContractingWorksClient {
     private final HttpClient httpClient;
     private final String token;

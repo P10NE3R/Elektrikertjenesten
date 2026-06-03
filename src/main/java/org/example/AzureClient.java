@@ -5,12 +5,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 /**
- * Oppretter en tilkobling til Azure SQL-databasen.
- * Leser DB_HOST, DB_NAME, DB_USER og DB_PASSWORD fra .env-filen.
+ * Klient for å opprette tilkobling til Azure SQL-databasen.
+ * Leser tilkoblingsinformasjon fra .env-filen og returnerer en aktiv Connection.
+ *
+ * Påkrevde variabler i .env:
+ *      DB_HOST     – serveradressen til Azure SQL (f.eks. dinserver.database.windows.net)
+ *      DB_NAME     – navnet på databasen
+ *      DB_USER     – brukernavn
+ *      DB_PASSWORD – passord
+ *
+ * Merk: IP-adressen din må være whitelistet i Azure Portal under Networking > Firewall rules.
  */
-
 public class AzureClient {
-
     public static Connection getConnection() throws Exception {
         Dotenv dotenv = Dotenv.load();
 
