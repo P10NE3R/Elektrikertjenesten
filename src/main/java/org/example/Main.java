@@ -1,5 +1,9 @@
 package org.example;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
+import java.net.http.HttpClient;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -10,7 +14,6 @@ public class Main {
                 e.printStackTrace();
             }
 
-        /*
         try {
             System.out.println("🚀 Starter applikasjonen...");
 
@@ -19,8 +22,8 @@ public class Main {
 
 
             HttpClient httpClient = HttpClient.newHttpClient();
-            AuthService authService = new AuthService(); // Sørg for at getToken() i AuthService ikke er 'static' lenger, eller kall den direkte.
-            GraphQLClient graphQLClient = new GraphQLClient(httpClient, authService, config);
+            String token = Token.getToken();
+            GraphQLClient graphQLClient = new GraphQLClient(httpClient, token, config);
 
 
             String query = "query GetProject($id: Int!) { project(id: $id) { name } }";
@@ -39,6 +42,6 @@ public class Main {
             System.err.println("Noe gikk galt under kjøring:");
             e.printStackTrace();
         }
-        */
+
     }
 }
