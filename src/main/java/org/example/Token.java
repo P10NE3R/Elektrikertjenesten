@@ -1,12 +1,16 @@
 package org.example;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.cdimascio.dotenv.Dotenv;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
-public class AuthService {
+public class Token {
 
     static String getToken() throws Exception {
 
@@ -18,16 +22,19 @@ public class AuthService {
         String tenantId = dotenv.get("TenantId");
         int clientId = Integer.parseInt(dotenv.get("ClientId"));
 
-
         if (authBaseUrl == null || subjectId == null || apiKey == null || tenantId == null) {
             throw new RuntimeException("Klarte ikke å laste alle variabler fra .env-filen!");
         }
 
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        String json = String.format(
-                "{\"subjectId\":\"%s\",\"apiKey\":\"%s\",\"clientId\":%d,\"tenantId\":\"%s\"}",
-                subjectId, apiKey, clientId, tenantId
-        );
+        Map<String, Object> bodyMap = new HashMap<>();
+        bodyMap.put("subjectId", subjectId);
+        bodyMap.put("apiKey", apiKey);
+        bodyMap.put("clientId", clientId);
+        bodyMap.put("tenantId", tenantId);
+
+        String json = objectMapper.writeValueAsString(bodyMap);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(authBaseUrl + "/Token/GenerateAccessTokenAsJson"))
@@ -42,22 +49,12 @@ public class AuthService {
         System.out.println("AUTH RESPONSE (" + response.statusCode() + "):");
         System.out.println(body);
 
-        String token = extract(body, "accessToken");
+        JsonNode jsonNode = objectMapper.readTree(body);
+        String token = jsonNode.path("accessToken").asText(null);
+
         if (token == null) {
             throw new RuntimeException("Failed to retrieve token");
         }
         return token;
     }
-
-    static String extract(String json, String field) {
-        String key = "\"" + field.toLowerCase() + "\"";
-        int i = json.toLowerCase().indexOf(key);
-        if (i < 0) return null;
-        i = json.indexOf(':', i) + 1;
-        int start = json.indexOf('"', i) + 1;
-        int end = json.indexOf('"', start);
-        if (start <= 0 || end < 0) return null;
-        return json.substring(start, end);
-    }
-
 }

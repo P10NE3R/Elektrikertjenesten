@@ -1,16 +1,15 @@
 package org.example;
 
-import java.net.http.HttpClient;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
-import io.github.cdimascio.dotenv.Dotenv;
-
 public class Main {
     public static void main(String[] args) {
-        String token = AuthService.getToken();
-        
+
+
+            try {
+                String token = Token.getToken();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         /*
         try {
             System.out.println("🚀 Starter applikasjonen...");

@@ -12,14 +12,14 @@ import java.util.Map;
 
 public class GraphQLClient {
     private final HttpClient httpClient;
-    private final AuthService authService;
+    private final Token token;
     private final String endpoint;
 
     private final ObjectMapper objectMapper;
 
-    public GraphQLClient(HttpClient httpClient, AuthService authService, Dotenv config) {
+    public GraphQLClient(HttpClient httpClient, Token token, Dotenv config) {
         this.httpClient = httpClient;
-        this.authService = authService;
+        this.token = token;
         this.objectMapper = new ObjectMapper();
 
         this.endpoint = config.get("GraphQLEndpoint");
@@ -32,7 +32,7 @@ public class GraphQLClient {
     public JsonNode sendQuery(String query, Object variables) throws Exception {
 
 
-        String token = authService.getToken();
+        String token = this.token.getToken();
 
         Map<String, Object> bodyMap = new HashMap<>();
         bodyMap.put("query", query);
