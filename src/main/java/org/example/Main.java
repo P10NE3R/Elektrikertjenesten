@@ -1,12 +1,17 @@
 package org.example;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import io.github.cdimascio.dotenv.Dotenv;
 import java.net.http.HttpClient;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class Main {
     public static void main(String[] args) {
+        String token = AuthService.getToken();
+        
+        /*
         try {
             System.out.println("🚀 Starter applikasjonen...");
 
@@ -35,5 +40,6 @@ public class Main {
             System.err.println("Noe gikk galt under kjøring:");
             e.printStackTrace();
         }
+        */
     }
 }

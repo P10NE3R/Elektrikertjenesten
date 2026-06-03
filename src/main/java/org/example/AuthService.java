@@ -1,16 +1,12 @@
 package org.example;
-import io.github.cdimascio.dotenv.Dotenv;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class AuthService {
+import io.github.cdimascio.dotenv.Dotenv;
 
-    public void main(String[] args) throws Exception {
-        String token = getToken();
-        System.out.println("TOKEN: " + token);
-    }
+public class AuthService {
 
     static String getToken() throws Exception {
 
@@ -63,4 +59,5 @@ public class AuthService {
         if (start <= 0 || end < 0) return null;
         return json.substring(start, end);
     }
+
 }
