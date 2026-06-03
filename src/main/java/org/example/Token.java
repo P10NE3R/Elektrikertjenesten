@@ -10,10 +10,27 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
+/**
+ * Hjelpeklasse for å hente et tilgangstoken fra autentiseringsserveren.
+ * Leser konfigurasjon fra .env-filen og sender en POST-forespørsel til autentiseringsserveren.
+ *
+ *
+ *
+ *      AuthBaseUrl     – basis-URL til autentiseringstjenesten
+ *      SubjectId       – identifikator for subjektet/brukeren
+ *      ApiKey          – API-nøkkel for autentisering
+ *      TenantId        – leietaker-ID i multi-tenant-oppsett
+ *      CentId          – klient-ID (heltall)
+ */
+
+
 public class Token {
 
     static String getToken() throws Exception {
 
+        //Denne er brukt for å hente variabler fra .env-fil
         Dotenv dotenv = Dotenv.load();
 
         String authBaseUrl = dotenv.get("AuthBaseUrl");
@@ -22,9 +39,11 @@ public class Token {
         String tenantId = dotenv.get("TenantId");
         int clientId = Integer.parseInt(dotenv.get("ClientId"));
 
+        //Sjekker at variablene i .env er tilstede
         if (authBaseUrl == null || subjectId == null || apiKey == null || tenantId == null) {
             throw new RuntimeException("Klarte ikke å laste alle variabler fra .env-filen!");
         }
+
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -36,6 +55,7 @@ public class Token {
 
         String json = objectMapper.writeValueAsString(bodyMap);
 
+        //Request til token serveren
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(authBaseUrl + "/Token/GenerateAccessTokenAsJson"))
                 .header("Content-Type", "application/json")
