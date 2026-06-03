@@ -23,11 +23,11 @@ public class ContractingWorksClient {
 
     private final ObjectMapper objectMapper;
 
-    public ContractingWorksClient(HttpClient httpClient, String token, Dotenv config) {
+    public ContractingWorksClient(HttpClient httpClient, String token) {
+        Dotenv config = Dotenv.load();
         this.httpClient = httpClient;
         this.token = token;
         this.objectMapper = new ObjectMapper();
-
         this.endpoint = config.get("GraphQLEndpoint");
         if (this.endpoint == null) {
             throw new RuntimeException("GraphQLEndpoint mangler i .env");
@@ -37,7 +37,7 @@ public class ContractingWorksClient {
 
     /**
      * Sender en GraphQL-spørring og returnerer svaret fra serveren.
-     * variables kan være null hvis spørringen ikke trenger variabler.
+     * variables gjør bare at denne er gjennbrukbar med flere queries.
      * Kaster en feil hvis serveren svarer med feilkode (ikke 200-299).
      */
 

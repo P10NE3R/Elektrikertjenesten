@@ -11,15 +11,17 @@ public class Main {
         try {
             System.out.println("Starter applikasjonen...");
 
-            Dotenv config = Dotenv.load();
+
 
             HttpClient httpClient = HttpClient.newHttpClient();
             String token = Token.getToken();
-            ContractingWorksClient contractingWorksClient = new ContractingWorksClient(httpClient, token, config);
 
 
-            //String query = "{ __typename }";
-            String query = "{ __schema { queryType { fields { name description } } } }";
+
+            ContractingWorksClient contractingWorksClient = new ContractingWorksClient(httpClient, token);
+
+
+            String query = "{ __typename }";
             Map<String, Object> variables = null;
 
             System.out.println("Sender GraphQL-sporring til Devinco");
