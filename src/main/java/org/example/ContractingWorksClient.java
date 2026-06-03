@@ -36,7 +36,7 @@ public class ContractingWorksClient {
     }
 
 
-    /**
+    /*
      * Sender en GraphQL-spørring og returnerer svaret fra serveren.
      * variables gjør bare at denne er gjennbrukbar med flere queries.
      * Kaster en feil hvis serveren svarer med feilkode (ikke 200-299).

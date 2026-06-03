@@ -1,0 +1,85 @@
+@startuml
+' Smetana = PlantUMLs innebygde layout-motor (krever ikke Graphviz/dot).
+!pragma layout smetana
+
+title Elektrikertjenesten – Klassemodell
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam DefaultFontName "Segoe UI"
+skinparam DefaultFontSize 12
+skinparam roundCorner 8
+skinparam Nodesep 40
+skinparam Ranksep 60
+
+skinparam class {
+  BackgroundColor #F7FBFF
+  BorderColor #2C6FBB
+  BorderThickness 1.3
+  HeaderBackgroundColor #D6E6FA
+  FontColor #1B2B3A
+  AttributeFontColor #2B2B2B
+}
+skinparam package {
+  BackgroundColor #FBFBFC
+  BorderColor #B9C2CC
+  FontColor #56616B
+  FontStyle plain
+}
+skinparam ArrowColor #44586B
+skinparam ArrowFontColor #5A6B7B
+skinparam ArrowFontSize 11
+
+package "org.example" as ex {
+
+  class Main {
+    + {static} main(args : String[]) : void
+  }
+
+  class AzureClient {
+    + {static} getConnection() : Connection
+  }
+
+  class Token {
+    ~ {static} getToken() : String
+  }
+
+  class ContractingWorksClient {
+    - httpClient : HttpClient
+    - token : String
+    - endpoint : String
+    - objectMapper : ObjectMapper
+    --
+    + ContractingWorksClient(httpClient : HttpClient, token : String)
+    + sendQuery(query : String, variables : Object) : JsonNode
+  }
+}
+
+package "Eksterne biblioteker / JDK" {
+  class Connection   <<java.sql>>
+  class Dotenv       <<dotenv-java>>
+  class HttpClient   <<java.net.http>>
+  class ObjectMapper <<Jackson>>
+  class JsonNode     <<Jackson>>
+}
+
+' === Relasjoner mellom egne klasser ===
+Main ..> AzureClient            : «use»
+Main ..> Token                  : «use»
+Main ..> ContractingWorksClient : «create»
+
+' === Egne klasser -> eksterne typer ===
+AzureClient ..> Connection      : «return»
+AzureClient ..> Dotenv
+
+Token ..> Dotenv
+
+ContractingWorksClient ..> Dotenv
+ContractingWorksClient o--> HttpClient   : injisert
+ContractingWorksClient *--> ObjectMapper : oppretter
+ContractingWorksClient ..> JsonNode      : «return»
+
+
+
+@enduml

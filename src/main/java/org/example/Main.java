@@ -41,7 +41,7 @@ public class Main {
             String query = "{ __typename }";
             Map<String, Object> variables = null;
 
-            System.out.println("Sender GraphQL-sporring til Devinco");
+            System.out.println("Henter token");
 
             JsonNode result = contractingWorksClient.sendQuery(query, variables);
 

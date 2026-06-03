@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class Token {
 
-    /**
+    /*
      * Henter og returnerer et access token fra autentiseringsserveren.
      * Kaster en feil hvis noen .env-variabler mangler eller token ikke returneres.
      */
