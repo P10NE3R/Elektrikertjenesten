@@ -10,14 +10,14 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GraphQLClient {
+public class ContractingWorksClient {
     private final HttpClient httpClient;
     private final Token token;
     private final String endpoint;
 
     private final ObjectMapper objectMapper;
 
-    public GraphQLClient(HttpClient httpClient, Token token, Dotenv config) {
+    public ContractingWorksClient(HttpClient httpClient, Token token, Dotenv config) {
         this.httpClient = httpClient;
         this.token = token;
         this.objectMapper = new ObjectMapper();

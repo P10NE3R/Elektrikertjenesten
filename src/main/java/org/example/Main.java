@@ -15,14 +15,16 @@ public class Main {
 
             HttpClient httpClient = HttpClient.newHttpClient();
             Token token = new Token();
-            GraphQLClient graphQLClient = new GraphQLClient(httpClient, token, config);
+            ContractingWorksClient contractingWorksClient = new ContractingWorksClient(httpClient, token, config);
 
-            String query = "query GetProject($id: Int!) { project(id: $id) { name } }";
-            Map<String, Object> variables = Map.of("id", 12345);
 
-            System.out.println("Sender GraphQL-sporring til Devinco...");
+            //String query = "{ __typename }";
+            String query = "{ __schema { queryType { fields { name description } } } }";
+            Map<String, Object> variables = null;
 
-            JsonNode result = graphQLClient.sendQuery(query, variables);
+            System.out.println("Sender GraphQL-sporring til Devinco");
+
+            JsonNode result = contractingWorksClient.sendQuery(query, variables);
 
             System.out.println("Svar mottatt fra serveren:");
             System.out.println(result.toPrettyString());
