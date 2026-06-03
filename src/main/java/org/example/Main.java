@@ -6,8 +6,21 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.net.http.HttpClient;
 import java.util.Map;
 
+import java.sql.Connection;
+
 public class Main {
     public static void main(String[] args) {
+
+        try {
+            Connection conn = AzureClient.getConnection();
+            System.out.println("Database tilkoblet: " + !conn.isClosed());
+            conn.close();
+        }catch (Exception e){
+            System.out.println("Svar mottatt fra serveren:");
+        }
+
+
+        /*
         try {
             System.out.println("Starter applikasjonen...");
 
@@ -35,5 +48,6 @@ public class Main {
             System.err.println("Noe gikk galt under kjoring:");
             e.printStackTrace();
         }
+        */
     }
 }
