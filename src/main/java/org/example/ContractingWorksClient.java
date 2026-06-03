@@ -10,14 +10,20 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Klient for å sende GraphQL-spørringer til ContractingWorks sitt API.
+ * Henter automatisk et nytt access token før hver spørring.
+ * Krever at GraphQLEndpoint er satt i .env-filen.
+ */
+
 public class ContractingWorksClient {
     private final HttpClient httpClient;
-    private final Token token;
+    private final String token;
     private final String endpoint;
 
     private final ObjectMapper objectMapper;
 
-    public ContractingWorksClient(HttpClient httpClient, Token token, Dotenv config) {
+    public ContractingWorksClient(HttpClient httpClient, String token, Dotenv config) {
         this.httpClient = httpClient;
         this.token = token;
         this.objectMapper = new ObjectMapper();
@@ -29,10 +35,13 @@ public class ContractingWorksClient {
     }
 
 
+    /**
+     * Sender en GraphQL-spørring og returnerer svaret fra serveren.
+     * variables kan være null hvis spørringen ikke trenger variabler.
+     * Kaster en feil hvis serveren svarer med feilkode (ikke 200-299).
+     */
+
     public JsonNode sendQuery(String query, Object variables) throws Exception {
-
-
-        String token = this.token.getToken();
 
         Map<String, Object> bodyMap = new HashMap<>();
         bodyMap.put("query", query);
@@ -40,13 +49,11 @@ public class ContractingWorksClient {
             bodyMap.put("variables", variables);
         }
 
-
         String jsonRequestBody = objectMapper.writeValueAsString(bodyMap);
-
-        //HTTP-request
+        //HTTP-request til kontracting works
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(endpoint))
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + this.token)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                 .build();
@@ -57,10 +64,8 @@ public class ContractingWorksClient {
 
 
         if (response.statusCode() < 200 || response.statusCode() >= 300) {
-            throw new RuntimeException("GraphQL error: " + responseString);
+            throw new RuntimeException("Får ikke respons fra Contracting Works: " + responseString);
         }
-
-
         return objectMapper.readTree(responseString);
     }
 }

@@ -14,7 +14,7 @@ public class Main {
             Dotenv config = Dotenv.load();
 
             HttpClient httpClient = HttpClient.newHttpClient();
-            Token token = new Token();
+            String token = Token.getToken();
             ContractingWorksClient contractingWorksClient = new ContractingWorksClient(httpClient, token, config);
 
 
