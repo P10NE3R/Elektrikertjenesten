@@ -16,8 +16,6 @@ public class Main {
     public static void main(String[] args) {
         AzureClient azure = new AzureClient();
         azure.AzureTester();
-
-        ContractingWorksClient cw = new ContractingWorksClient();
         
 
         AzureClient.closeCache();
