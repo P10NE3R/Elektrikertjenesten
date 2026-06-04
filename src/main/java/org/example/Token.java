@@ -85,6 +85,6 @@ public class Token {
         }
         expireTime = System.currentTimeMillis() + (55 * 60 * 1000);
         System.out.println(expireTime);
-        return token;
+        return cachedToken = token;
     }
 }

@@ -14,48 +14,10 @@ import java.sql.Connection;
  */
 public class Main {
     public static void main(String[] args) {
-        
-
-        /*
-        try {
-            Connection conn = AzureClient.getConnection();
-            System.out.println("Database tilkoblet: " + !conn.isClosed());
-            conn.close();
-        }catch (Exception e){
-            System.out.println("Svar mottatt fra serveren:");
-        }
+        AzureClient azure = new AzureClient();
+        azure.AzureTester();
 
 
-
-        try {
-
-
-
-
-            HttpClient httpClient = HttpClient.newHttpClient();
-            String token = Token.getToken();
-
-
-
-            ContractingWorksClient contractingWorksClient = new ContractingWorksClient(httpClient, token);
-
-
-            String query = "{ __typename }";
-            Map<String, Object> variables = null;
-
-            System.out.println("Henter token");
-
-            JsonNode result = contractingWorksClient.sendQuery(query, variables);
-
-            System.out.println("Svar mottatt fra serveren:");
-            System.out.println(result.toPrettyString());
-
-        } catch (Exception e) {
-            System.err.println("Noe gikk galt under kjoring:");
-            e.printStackTrace();
-        }
-
-         */
-
+        AzureClient.closeCache();
     }
 }

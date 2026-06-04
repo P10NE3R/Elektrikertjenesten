@@ -12,10 +12,15 @@ import java.util.Map;
 
 /**
  * Klient for å sende GraphQL-spørringer til ContractingWorks sitt API.
- * Tar imot et access token fra Main og legger det på hver HTTP-forespørsel.
+ * Bruker et access token fra Token-klassen og legger det på hver HTTP-forespørsel.
  *
  * Påkrevde variabler i .env:
  *      GraphQLEndpoint – full URL til GraphQL-endepunktet
+ *      AuthBaseUrl     – basis-URL til autentiseringstjenesten
+ *      SubjectId       – identifikator for brukeren
+ *      ApiKey          – API-nøkkel for autentisering
+ *      TenantId        – leietaker-ID i multi-tenant-oppsett
+ *      ClientId        – klient-ID (heltall)
  */
 public class ContractingWorksClient {
     private final HttpClient httpClient;
@@ -73,10 +78,17 @@ public class ContractingWorksClient {
         return objectMapper.readTree(responseString);
     }
 
+
+
+    /*
+     * Tester at tilkoblingen til ContractingWorks fungerer.
+     * Sender en minimal spørring og skriver ut svaret fra serveren.
+     * Kaster en feil hvis token ikke kan hentes eller tilkoblingen feiler.
+     */
     public void CWTester() throws Exception{
         try {
-            HttpClient httpClient = HttpClient.newHttpClient();
-            String token = Token.getToken();
+            HttpClient httpClient = this.httpClient;
+            String token = this.token;
 
             ContractingWorksClient contractingWorksClient = new ContractingWorksClient(httpClient, token);
             String query = "{ __typename }";
@@ -93,10 +105,19 @@ public class ContractingWorksClient {
         }
     }
 
-    public void CWquery(String queryInput) throws Exception{
+
+
+
+    /*
+     * Sender en GraphQL-spørring til ContractingWorks og returnerer svaret som JsonNode.
+     * queryInput – GraphQL-spørringen som skal sendes (f.eks. "{ projects { id name } }")
+     * Returnerer svaret fra serveren som en JsonNode.
+     * Kaster en feil hvis spørringen feiler eller serveren svarer med feilkode.
+     */
+    public JsonNode CWquery(String queryInput) throws Exception{
         try {
-            HttpClient httpClient = HttpClient.newHttpClient();
-            String token = Token.getToken();
+            HttpClient httpClient = this.httpClient;
+            String token = this.token;
 
             ContractingWorksClient contractingWorksClient = new ContractingWorksClient(httpClient, token);
             String query = queryInput;
@@ -106,9 +127,11 @@ public class ContractingWorksClient {
             JsonNode result = contractingWorksClient.sendQuery(query, variables);
             System.out.println("Svar mottatt fra serveren:");
             System.out.println(result.toPrettyString());
+            return result;
         } catch (Exception e) {
             System.err.println("Noe gikk galt under kjoring:");
             e.printStackTrace();
+            return null;
         }
     }
 

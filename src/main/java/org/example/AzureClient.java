@@ -4,6 +4,9 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import java.sql.*;
+import java.util.*;
+
 /**
  * Klient for å opprette tilkobling til Azure SQL-databasen.
  * Leser tilkoblingsinformasjon fra .env-filen og returnerer en aktiv Connection.
@@ -17,7 +20,20 @@ import java.sql.DriverManager;
  * Merk: IP-adressen din må være whitelistet i Azure Portal under Networking > Firewall rules.
  */
 public class AzureClient {
+
+    public static Connection cachedConnection = null;
+
+    /*
+     * Oppretter og returnerer en tilkobling til Azure SQL-databasen.
+     * Henter tilkoblingsinformasjon fra .env-filen.
+     * Kaster en feil hvis variabler mangler eller tilkoblingen feiler.
+     */
     public static Connection getConnection() throws Exception {
+
+        if (cachedConnection != null && !cachedConnection.isClosed()) {
+            return cachedConnection;
+        }
+
         Dotenv dotenv = Dotenv.load();
 
         String host     = dotenv.get("DB_HOST");
@@ -36,19 +52,56 @@ public class AzureClient {
                    + "encrypt=true;"
                    + "trustServerCertificate=false;";
 
-        return DriverManager.getConnection(url);
+        return cachedConnection = DriverManager.getConnection(url);
     }
 
-    public void AzureTester(){
-        try {
-            Connection conn = AzureClient.getConnection();
-            System.out.println("Database tilkoblet: " + !conn.isClosed());
-            conn.close();
-        }catch (Exception e){
-            System.out.println("Svar mottatt fra serveren:");
+    /*
+     * Lukker en åpen databasetilkobling.
+     * Gjør ingenting hvis tilkoblingen allerede er null.
+     */
+    public static void closeConnection(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                System.out.println("Klarte ikke å lukke tilkoblingen: " + e.getMessage());
+            }
         }
     }
 
+    public static void closeCache() {
+        closeConnection(cachedConnection);
+        cachedConnection = null;
+    }
+
+    /*
+     * Tester at tilkoblingen til Azure SQL-databasen fungerer.
+     * Skriver ut om tilkoblingen var vellykket eller ikke.
+     */
+    public void AzureTester() {
+        try {
+            Connection conn = AzureClient.getConnection();
+            System.out.println("Database tilkoblet: ");
+        } catch (Exception e) {
+            System.out.println("Klarte ikke å koble til databasen: " + e.getMessage());
+        }
+    }
+
+    /*
+     * Kjører en INSERT, UPDATE eller DELETE mot Azure SQL-databasen.
+     * Returnerer antall rader som ble påvirket.
+     * Kaster en feil hvis tilkoblingen feiler eller spørringen er ugyldig.
+     */
+    public static int AzureUpdate(String query) throws Exception {
+        Statement statement = getConnection().createStatement();
+        return statement.executeUpdate(query);
+    }
 
 
-}
+
+
+    }
+
+
+
+
