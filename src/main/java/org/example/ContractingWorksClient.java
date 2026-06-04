@@ -50,7 +50,10 @@ public class ContractingWorksClient {
             bodyMap.put("variables", variables);
         }
 
+        //objectMapper parser JSON, men kan også gjøre om fra String til JSON
         String jsonRequestBody = objectMapper.writeValueAsString(bodyMap);
+
+
         //HTTP-request til kontracting works
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(endpoint))
@@ -69,4 +72,44 @@ public class ContractingWorksClient {
         }
         return objectMapper.readTree(responseString);
     }
+
+    public void CWTester() throws Exception{
+        try {
+            HttpClient httpClient = HttpClient.newHttpClient();
+            String token = Token.getToken();
+
+            ContractingWorksClient contractingWorksClient = new ContractingWorksClient(httpClient, token);
+            String query = "{ __typename }";
+            Map<String, Object> variables = null;
+
+            System.out.println("Henter token");
+            JsonNode result = contractingWorksClient.sendQuery(query, variables);
+
+            System.out.println("Svar mottatt fra serveren:");
+            System.out.println(result.toPrettyString());
+        } catch (Exception e) {
+            System.err.println("Noe gikk galt under kjoring:");
+            e.printStackTrace();
+        }
+    }
+
+    public void CWquery(String queryInput) throws Exception{
+        try {
+            HttpClient httpClient = HttpClient.newHttpClient();
+            String token = Token.getToken();
+
+            ContractingWorksClient contractingWorksClient = new ContractingWorksClient(httpClient, token);
+            String query = queryInput;
+            Map<String, Object> variables = null;
+
+
+            JsonNode result = contractingWorksClient.sendQuery(query, variables);
+            System.out.println("Svar mottatt fra serveren:");
+            System.out.println(result.toPrettyString());
+        } catch (Exception e) {
+            System.err.println("Noe gikk galt under kjoring:");
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -25,11 +25,18 @@ import java.util.Map;
  */
 public class Token {
 
+    private static String cachedToken = null;
+    public static long expireTime = 0;
+
     /*
      * Henter og returnerer et access token fra autentiseringsserveren.
      * Kaster en feil hvis noen .env-variabler mangler eller token ikke returneres.
      */
     static String getToken() throws Exception {
+        //Sjekker om token har gått ut enda
+        if(cachedToken != null && System.currentTimeMillis() < expireTime){
+            return cachedToken;
+        }
 
         //Denne er brukt for å hente variabler fra .env-fil
         Dotenv dotenv = Dotenv.load();
@@ -76,6 +83,8 @@ public class Token {
         if (token == null) {
             throw new RuntimeException("Failed to retrieve token");
         }
+        expireTime = System.currentTimeMillis() + (55 * 60 * 1000);
+        System.out.println(expireTime);
         return token;
     }
 }

@@ -39,6 +39,15 @@ public class AzureClient {
         return DriverManager.getConnection(url);
     }
 
+    public void AzureTester(){
+        try {
+            Connection conn = AzureClient.getConnection();
+            System.out.println("Database tilkoblet: " + !conn.isClosed());
+            conn.close();
+        }catch (Exception e){
+            System.out.println("Svar mottatt fra serveren:");
+        }
+    }
 
 
 

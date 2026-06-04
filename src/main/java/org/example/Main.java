@@ -14,7 +14,9 @@ import java.sql.Connection;
  */
 public class Main {
     public static void main(String[] args) {
+        
 
+        /*
         try {
             Connection conn = AzureClient.getConnection();
             System.out.println("Database tilkoblet: " + !conn.isClosed());
@@ -24,9 +26,9 @@ public class Main {
         }
 
 
-        /*
+
         try {
-            System.out.println("Starter applikasjonen...");
+
 
 
 
@@ -52,6 +54,8 @@ public class Main {
             System.err.println("Noe gikk galt under kjoring:");
             e.printStackTrace();
         }
-        */
+
+         */
+
     }
 }
