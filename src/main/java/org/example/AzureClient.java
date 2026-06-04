@@ -81,7 +81,9 @@ public class AzureClient {
     public void AzureTester() {
         try {
             Connection conn = AzureClient.getConnection();
-            System.out.println("Database tilkoblet: ");
+            if(conn != null){
+                System.out.println("Database tilkoblet: ");
+            }
         } catch (Exception e) {
             System.out.println("Klarte ikke å koble til databasen: " + e.getMessage());
         }

@@ -17,6 +17,8 @@ public class Main {
         AzureClient azure = new AzureClient();
         azure.AzureTester();
 
+        ContractingWorksClient cw = new ContractingWorksClient();
+        
 
         AzureClient.closeCache();
     }
