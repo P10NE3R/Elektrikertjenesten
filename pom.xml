@@ -25,6 +25,14 @@
             <artifactId>mssql-jdbc</artifactId>
             <version>13.4.0.jre11</version>
         </dependency>
+        <dependency>
+            <groupId>com.microsoft.azure.functions</groupId>
+            <artifactId>azure-functions-java-library</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+
+
     </dependencies>
 
     <properties>
@@ -32,5 +40,21 @@
         <maven.compiler.target>23</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.microsoft.azure</groupId>
+                <artifactId>azure-functions-maven-plugin</artifactId>
+                <version>1.36.0</version>
+                <configuration>
+                    <appName>elektrikertjenesten</appName>
+                    <resourceGroup>your-resource-group</resourceGroup>
+                    <region>norwayeast</region>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 
 </project>
